@@ -1,0 +1,31 @@
+import pandas as pd
+
+df2 = pd.read_csv(
+    r'C:\Path\to\file\stLFR\20DK1.bed', sep='\t',
+    names=['chrA2', 'Start2', 'End2', 'ALT2'])
+
+df1 = pd.read_csv(
+    r'C:\Path\to\file\stLFR\20DK2.bed', sep='\t',
+    names=['chrA1', 'Start1', 'End1', 'ALT1'])
+
+df_main = pd.read_csv(
+    r'C:\Path\to\file\stLFR\20DK2vsDK1.bed',
+    sep='\t',
+    names=['chrA1', 'Start1', 'End1', 'ALT1', 'chrA2', 'Start2', 'End2', 'ALT2'])
+
+df_new = df_main[df_main['ALT1'] == df_main['ALT2']].drop_duplicates()
+
+df_firt_half = df_new[df_new.columns[:4]].drop_duplicates()
+
+df_second_half = df_new[df_new.columns[4:]].drop_duplicates()
+
+#Для нового генома
+x = pd.merge(df1, df_firt_half, how='outer', indicator=True)
+x= x.sort_values('_merge', ascending=False)
+
+x.to_excel(r'C:\Path\to\folder\stLFR\20DK2-diff.xlsx', index=False)
+
+#Для контроля. То есть для генома с которым сравниваем
+y = pd.merge(df2, df_second_half, how='outer', indicator=True)
+y= y.sort_values('_merge', ascending=False)
+y.to_excel(r'C:\ath\to\folder\stLFR\20DK1-diff.xlsx', index=False)
