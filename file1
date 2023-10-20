@@ -1,0 +1,29 @@
+import pandas as pd
+
+def readfile(file):
+    x = df.drop(['SvID', 'BreakID1', 'BreakID2', 'ChrB',
+                            'ShareBarcode', 'RealType', 'QualityScore',
+                            'ComprehensiveFilter', 'HeatmapFilter', 'PhaseFilter',
+                            'MapQFilter', 'PairEndFilter', 'LocalizationFilter',
+                            'BlackList', 'ControlList', 'SegmentCheck1',
+                            'SegmentCheck2', 'SVchain'], axis=1)
+    return x
+
+f = r'C:\Path\to\file\stLFR\20DK2A.out\20DK2A.sort.rmdup.bam.FINAL'
+new_file = readfile(f).drop_duplicates() #удаляем все повторы
+
+data_new = new_file.copy()
+data_new['EventID'] = data_new['EventID'].str.replace('*','')
+data_new['PosA'], data_new['PosB'] = data_new.min(axis=1), data_new.max(axis=1)
+data_new['SimpleType'] = data_new['SimpleType'].str.strip().replace(dict(zip(['TRA1','TRA2','TRA3','TRA4'],['TRA']*4)), regex=True)
+data_new['SimpleType'] = data_new['SimpleType'].str.strip().replace(dict(zip(['INV1','INV2'],['INV']*2)), regex=True)
+new_order = data_new[['EventID','ChrA','PosA','PosB','SimpleType']]
+
+r=new_order[new_order[['EventID', 'SimpleType']].duplicated()] 
+res = new_order[~new_order.index.isin(r.index)]#удаляем события, где EVENTID и SV_Type повторяются
+
+res = res.drop(['EventID'], axis=1)
+res= res.drop_duplicates()
+
+res.to_csv(r'C:\Path\to\folder\stLFR\20DK2.bed',
+                 index=False, header=False, sep='\t')
