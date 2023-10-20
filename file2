@@ -28,4 +28,16 @@ x.to_excel(r'C:\Path\to\folder\stLFR\20DK2-diff.xlsx', index=False)
 #Для контроля. То есть для генома с которым сравниваем
 y = pd.merge(df2, df_second_half, how='outer', indicator=True)
 y= y.sort_values('_merge', ascending=False)
-y.to_excel(r'C:\ath\to\folder\stLFR\20DK1-diff.xlsx', index=False)
+y.to_excel(r'C:\Path\to\folder\stLFR\20DK1-diff.xlsx', index=False)
+
+#Получение файла с уникальнынми делециями
+new_x = x[x['_merge'] == 'left_only']
+new_x = new_x[new_x['ALT1']=='DEL']
+print(new_x)
+new_x.to_csv(r'C:\Path\to\folder\stLFR\20DK2vsDK1_DEL.bed',
+                   index=False, header=False, sep='\t')
+
+# Если Бэкграунд - все делеции
+back_x = x[x['ALT1']=='DEL']
+back_x.to_csv(r'C:\Path\to\folder\stLFR\20DK2vsDK1_background.bed',
+                   index=False, header=False, sep='\t')
