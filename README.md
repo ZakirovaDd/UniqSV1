@@ -1,7 +1,7 @@
 # UniqSV1
 Подготовка и получение файлов SV
 1. Работа с bam файлом:
-  Предварительно обрабатываем bam файлы, удаляем дупликаты: файл с кодом [file1](https://github.com/ZakirovaDd/FLAX/blob/main/mergefile1)
+  Предварительно обрабатываем bam файлы, удаляем дупликаты: файл с кодом [file1](https://github.com/ZakirovaDd/UniqSV1/blob/main/file1)
 
 2. В bedtools пересекаем два файла с использование функции intersect -f, чтобы определить
    bedtools intersect -wa -wb -a Исследуемый_файл.bed -b Контроль.bed -f 0.9 -r  >  Итоговый_файл.bed
